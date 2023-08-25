@@ -1,7 +1,10 @@
 const http = require("http");
 const { readFileSync } = require("fs");
 
-const home = readFileSync("./index.html");
+const home = readFileSync("./navbar/index.html");
+const styleHome = readFileSync("./navbar/styles.css");
+const logo = readFileSync("./navbar/logo.png");
+const navbarLogic = readFileSync("./navbar/navbar.js");
 
 const server = http.createServer((req, res) => {
   const url = req.url;
@@ -18,6 +21,18 @@ const server = http.createServer((req, res) => {
     // Providing Header -- providing metadata about response
     res.writeHead(200, { "content-type": "text/html" });
     res.write("<h1>Frontend Engineer learning backend</h1>");
+    res.end();
+  } else if (url === "/styles.css") {
+    res.writeHead(200, { "content-type": "text/css" });
+    res.write(styleHome);
+    res.end();
+  } else if (url === "/logo.png") {
+    res.writeHead(200, { "content-type": "image/png" });
+    res.write(logo);
+    res.end();
+  } else if (url === "/navbar.js") {
+    res.writeHead(200, { "content-type": "text/javascript" });
+    res.write(navbarLogic);
     res.end();
   }
   // Error Page
