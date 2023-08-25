@@ -1,53 +1,30 @@
 const express = require("express");
 const app = express();
+const logger = require("./logger");
+const authorize = require("./authorize");
 
-const { products } = require("./data");
+// req => middleware => res
+
+// app.use("/api", logger); // app.use() will invoke logger function for any route
+// note : order matters
+
+// if path is provided--- middleware function will be called according to give path
+
+// to pass multiple middleware, use array
+app.use([logger, authorize]); // these will be execute in order
 
 app.get("/", (req, res) => {
-  res.send('<h1>Namaste Dev</h1><a href="/api/products">products</a>');
+  res.send("Home");
 });
-
+app.get("/about", (req, res) => {
+  res.send("About");
+});
 app.get("/api/products", (req, res) => {
-  const newProducts = products.map((product) => {
-    const { id, name, image } = product;
-    return { id, name, image }; // responding with selective information
-  });
-  res.json(newProducts);
+  res.send("Products");
 });
-
-// route params
-app.get("/api/products/:productId", (req, res) => {
-  //   console.log(req.params);
-  const { productId } = req.params;
-  const selectedProduct = products.find((product) => product.id === +productId);
-  if (!selectedProduct) {
-    res.status(404).send("Product not found!!!");
-  }
-  res.json(selectedProduct);
-});
-
-// Query-String
-app.get("/api/v1/query", (req, res) => {
-  console.log(req.query);
-  const { search, limit } = req.query;
-  let sortedProducts = [...products];
-
-  if (search) {
-    sortedProducts = sortedProducts.filter((product) => {
-      return product.name.startsWith(search);
-    });
-  }
-  if (limit) {
-    sortedProducts = sortedProducts.slice(0, +limit);
-  }
-  if (sortedProducts.length < 1) {
-    return res.status(200).json({ sucess: true, data: [] });
-  }
-  return res.status(200).json(sortedProducts);
-});
-
-app.all("*", (req, res) => {
-  res.status(404).send("page not found!!!");
+app.get("/api/items", (req, res) => {
+  console.log(req.user);
+  res.send("Items");
 });
 
 app.listen(8000, () => {
