@@ -17,11 +17,15 @@ const {
 // in different files.
 
 router.get("/", getPeople);
-
 router.post("/", createPerson);
 
-router.put("/:id", updatePerson);
+//we can chain above two
+// router.route('/').get(getPeople).post(createPerson)
 
+router.put("/:id", updatePerson);
 router.delete("/:id", deletePerson);
+
+// we can chain above two aswell
+// router.route('/:id').put(updatePerson).delete(deletePerson)
 
 module.exports = router;
